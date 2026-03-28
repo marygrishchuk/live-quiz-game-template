@@ -1,3 +1,4 @@
+import type { WebSocket } from 'ws';
 import type { Game, User } from './types.js';
 
 export const usersByIndex: Record<string, User> = {};
@@ -12,10 +13,9 @@ export const formatRoomCode = (code: string): string => code.trim().toUpperCase(
 
 export const generateRoomCode = (): string => {
   while (true) {
-    let out = '';
-    for (let i = 0; i < ROOM_CODE_LENGTH; i++) {
-      out += ROOM_CODE_ALPHABET[Math.floor(Math.random() * ROOM_CODE_ALPHABET.length)];
-    }
+    const out = Array.from({ length: ROOM_CODE_LENGTH }, () =>
+      ROOM_CODE_ALPHABET[Math.floor(Math.random() * ROOM_CODE_ALPHABET.length)],
+    ).join('');
     if (!Object.hasOwn(codeToGameId, out)) return out;
   }
 };
@@ -32,3 +32,6 @@ export const getGameIdByRoomCode = (rawCode: string): string | undefined => {
   const key = formatRoomCode(rawCode);
   return Object.hasOwn(codeToGameId, key) ? codeToGameId[key] : undefined;
 };
+
+export const getUserByWebSocket = (ws: WebSocket): User | undefined =>
+  Object.values(usersByIndex).find((user) => user.ws === ws);

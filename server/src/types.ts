@@ -27,7 +27,7 @@ export interface Game {
   status: 'waiting' | 'in_progress' | 'finished';
   questionStartTime?: number;
   questionTimer?: NodeJS.Timeout;
-  playerAnswers: Map<string, { answerIndex: number; timestamp: number }>;
+  playerAnswers: Record<string, { answerIndex: number; timestamp: number }>;
 }
 
 export interface User {
