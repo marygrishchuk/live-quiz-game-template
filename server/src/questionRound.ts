@@ -1,10 +1,10 @@
 import type { Game } from './types.js';
-import { broadcastToGame } from './outgoing.js';
-import { broadcastQuestion } from './questionBroadcast.js';
 import {
-  buildResultsWithRoundScores,
-  buildFinalScoreboard,
-} from './utils/scoring.js';
+  broadcastQuestion,
+  broadcastRankedGameFinished,
+  broadcastToGame,
+} from './utils/outgoing.js';
+import { buildResultsWithRoundScores } from './utils/scoring.js';
 
 export const clearQuestionTimer = (game: Game): void => {
   const timerHandle = game.questionTimer;
@@ -19,13 +19,6 @@ export const resetRoundAnswerState = (game: Game): void => {
     delete player.hasAnswered;
     delete player.answerTime;
     delete player.answeredCorrectly;
-  });
-};
-
-const finishAfterLastRound = (game: Game): void => {
-  game.status = 'finished';
-  broadcastToGame(game, 'game_finished', {
-    scoreboard: buildFinalScoreboard(game.players),
   });
 };
 
@@ -59,6 +52,6 @@ export const finalizeQuestionRound = (game: Game, expectedIndex: number): void =
     correctIndex: question.correctIndex,
     playerResults,
   });
-  const hasMore = expectedIndex < game.questions.length - 1;
-  hasMore ? advanceAfterRound(game, expectedIndex) : finishAfterLastRound(game);
+  const hasMoreQuestions = expectedIndex < game.questions.length - 1;
+  hasMoreQuestions ? advanceAfterRound(game, expectedIndex) : broadcastRankedGameFinished(game);
 };

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import type { User } from './types.js';
-import { sendJson } from './outgoing.js';
+import { sendJson } from './utils/outgoing.js';
 import { usersByIndex, usersByName } from './stores.js';
 
 const readRegPayload = (data: unknown): { name: string; password: string } | null => {

@@ -1,5 +1,5 @@
 import type { WebSocket } from 'ws';
-import { sendError, sendJson } from './outgoing.js';
+import { sendError, sendJson } from './utils/outgoing.js';
 import { finalizeQuestionRound } from './questionRound.js';
 import { gamesById, getUserByWebSocket } from './stores.js';
 

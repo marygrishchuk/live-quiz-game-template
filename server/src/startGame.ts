@@ -1,6 +1,5 @@
 import type { WebSocket } from 'ws';
-import { sendError } from './outgoing.js';
-import { broadcastQuestion } from './questionBroadcast.js';
+import { broadcastQuestion, sendError } from './utils/outgoing.js';
 import {
   clearQuestionTimer,
   resetRoundAnswerState,

@@ -1,6 +1,6 @@
 import type { WebSocket } from 'ws';
 import type { Game, Player } from './types.js';
-import { broadcastToGame, sendError, sendJson } from './outgoing.js';
+import { broadcastToGame, sendError, sendJson } from './utils/outgoing.js';
 import { gamesById, getGameIdByRoomCode, getUserByWebSocket } from './stores.js';
 
 const readJoinCode = (data: unknown): string | null => {

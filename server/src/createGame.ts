@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
 import type { Game, Question } from './types.js';
-import { sendError, sendJson } from './outgoing.js';
+import { sendError, sendJson } from './utils/outgoing.js';
 import {
   gamesById,
   generateRoomCode,
