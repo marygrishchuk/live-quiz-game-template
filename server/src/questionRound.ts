@@ -1,7 +1,10 @@
 import type { Game } from './types.js';
 import { broadcastToGame } from './outgoing.js';
 import { broadcastQuestion } from './questionBroadcast.js';
-import { buildFinalScoreboard, scoreForCorrectAnswer } from './utils/scoring.js';
+import {
+  buildResultsWithRoundScores,
+  buildFinalScoreboard,
+} from './utils/scoring.js';
 
 export const clearQuestionTimer = (game: Game): void => {
   const timerHandle = game.questionTimer;
@@ -50,22 +53,7 @@ export const finalizeQuestionRound = (game: Game, expectedIndex: number): void =
   clearQuestionTimer(game);
   const question = game.questions[expectedIndex];
   const start = game.questionStartTime ?? Date.now();
-  const playerResults = game.players.map((player) => {
-    const answerRecord = game.playerAnswers[player.index];
-    const answered = answerRecord !== undefined;
-    const correct = answered ? answerRecord.answerIndex === question.correctIndex : false;
-    const pointsEarned = correct
-      ? scoreForCorrectAnswer(start, answerRecord.timestamp, question.timeLimitSec)
-      : 0;
-    player.score += pointsEarned;
-    return {
-      name: player.name,
-      answered,
-      correct: answered && correct,
-      pointsEarned,
-      totalScore: player.score,
-    };
-  });
+  const playerResults = buildResultsWithRoundScores(game, question, start);
   broadcastToGame(game, 'question_result', {
     questionIndex: expectedIndex,
     correctIndex: question.correctIndex,

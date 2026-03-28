@@ -68,7 +68,5 @@ export const handleAnswer = (ws: WebSocket, data: unknown): void => {
   const allAnswered = game.players.every((entry) =>
     Object.hasOwn(game.playerAnswers, entry.index),
   );
-  if (allAnswered) {
-    finalizeQuestionRound(game, game.currentQuestion);
-  }
+  if (allAnswered) finalizeQuestionRound(game, game.currentQuestion);
 };
