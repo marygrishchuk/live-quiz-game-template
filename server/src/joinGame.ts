@@ -10,7 +10,11 @@ const readJoinCode = (data: unknown): string | null => {
 };
 
 const getPlayersPayload = (game: Game) =>
-  game.players.map((p) => ({ name: p.name, index: p.index, score: p.score }));
+  game.players.map((player) => ({
+    name: player.name,
+    index: player.index,
+    score: player.score,
+  }));
 
 export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
   const user = getUserByWebSocket(ws);
@@ -37,7 +41,7 @@ export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
     sendError(ws, 'Host cannot join as a player');
     return;
   }
-  const existing = game.players.find((p) => p.index === user.index);
+  const existing = game.players.find((player) => player.index === user.index);
   if (existing) {
     existing.ws = ws;
     sendJson(ws, 'game_joined', { gameId });
@@ -45,7 +49,9 @@ export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
     return;
   }
   if (
-    game.players.some((p) => p.name.toLowerCase() === user.name.toLowerCase())
+    game.players.some(
+      (player) => player.name.toLowerCase() === user.name.toLowerCase(),
+    )
   ) {
     sendError(ws, 'Name already taken in this game');
     return;

@@ -19,5 +19,5 @@ export const broadcastToGame = (game: Game, type: string, data: unknown): void =
     sendJson(socket, type, data);
   };
   emit(usersByIndex[game.hostId]?.ws);
-  for (const p of game.players) emit(p.ws);
+  game.players.forEach((player) => emit(player.ws));
 };

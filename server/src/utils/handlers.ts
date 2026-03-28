@@ -1,8 +1,10 @@
 import type { RawData, WebSocket } from 'ws';
-import type { WSMessage } from './types.js';
-import { handleCreateGame } from './createGame.js';
-import { handleJoinGame } from './joinGame.js';
-import { handleReg } from './reg.js';
+import type { WSMessage } from '../types.js';
+import { handleAnswer } from '../answer.js';
+import { handleCreateGame } from '../createGame.js';
+import { handleJoinGame } from '../joinGame.js';
+import { handleReg } from '../reg.js';
+import { handleStartGame } from '../startGame.js';
 
 const rawToUtf8 = (raw: RawData): string => {
   if (typeof raw === 'string') return raw;
@@ -15,17 +17,13 @@ const parseMessage = (raw: RawData): WSMessage | null => {
   try {
     const value = JSON.parse(rawToUtf8(raw)) as unknown;
     if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-    const rec = value as Record<string, unknown>;
-    if (typeof rec.type !== 'string' || rec.id !== 0) return null;
-    return { type: rec.type, data: rec.data, id: 0 };
+    const envelope = value as Record<string, unknown>;
+    if (typeof envelope.type !== 'string' || envelope.id !== 0) return null;
+    return { type: envelope.type, data: envelope.data, id: 0 };
   } catch {
     return null;
   }
 };
-
-const onStartGame = (_ws: WebSocket, _data: unknown): void => {};
-
-const onAnswer = (_ws: WebSocket, _data: unknown): void => {};
 
 export const handleIncoming = (ws: WebSocket, raw: RawData): void => {
   try {
@@ -42,10 +40,10 @@ export const handleIncoming = (ws: WebSocket, raw: RawData): void => {
         handleJoinGame(ws, msg.data);
         break;
       case 'start_game':
-        onStartGame(ws, msg.data);
+        handleStartGame(ws, msg.data);
         break;
       case 'answer':
-        onAnswer(ws, msg.data);
+        handleAnswer(ws, msg.data);
         break;
       default:
         break;

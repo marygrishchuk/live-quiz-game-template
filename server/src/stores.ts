@@ -13,10 +13,10 @@ export const formatRoomCode = (code: string): string => code.trim().toUpperCase(
 
 export const generateRoomCode = (): string => {
   while (true) {
-    const out = Array.from({ length: ROOM_CODE_LENGTH }, () =>
+    const candidateCode = Array.from({ length: ROOM_CODE_LENGTH }, () =>
       ROOM_CODE_ALPHABET[Math.floor(Math.random() * ROOM_CODE_ALPHABET.length)],
     ).join('');
-    if (!Object.hasOwn(codeToGameId, out)) return out;
+    if (!Object.hasOwn(codeToGameId, candidateCode)) return candidateCode;
   }
 };
 

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebSocketServer } from 'ws';
-import { handleIncoming } from './handlers.js';
+import { handleIncoming } from './utils/handlers.js';
 
 const DEFAULT_PORT = 3000;
 

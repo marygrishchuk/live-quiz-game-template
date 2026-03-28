@@ -11,11 +11,17 @@ import {
 
 const parseOneQuestion = (item: unknown): Question | null => {
   if (!item || typeof item !== 'object' || Array.isArray(item)) return null;
-  const q = item as Record<string, unknown>;
-  if (typeof q.text !== 'string' || !q.text.trim()) return null;
-  if (!Array.isArray(q.options) || q.options.length !== 4) return null;
-  if (!q.options.every((o) => typeof o === 'string' && String(o).trim())) return null;
-  const { correctIndex, timeLimitSec } = q;
+  const rawQuestion = item as Record<string, unknown>;
+  if (typeof rawQuestion.text !== 'string' || !rawQuestion.text.trim()) return null;
+  if (!Array.isArray(rawQuestion.options) || rawQuestion.options.length !== 4) return null;
+  if (
+    !rawQuestion.options.every(
+      (option) => typeof option === 'string' && String(option).trim(),
+    )
+  ) {
+    return null;
+  }
+  const { correctIndex, timeLimitSec } = rawQuestion;
   if (
     typeof correctIndex !== 'number' ||
     !Number.isInteger(correctIndex) ||
@@ -28,8 +34,8 @@ const parseOneQuestion = (item: unknown): Question | null => {
     return null;
   }
   return {
-    text: q.text.trim(),
-    options: (q.options as string[]).map((o) => o.trim()),
+    text: rawQuestion.text.trim(),
+    options: (rawQuestion.options as string[]).map((option) => option.trim()),
     correctIndex,
     timeLimitSec,
   };
@@ -40,7 +46,9 @@ const parseValidatedQuestions = (data: unknown): Question[] | null => {
   const raw = (data as Record<string, unknown>).questions;
   if (!Array.isArray(raw) || raw.length < 1) return null;
   const parsed = raw.map(parseOneQuestion);
-  return parsed.every((q): q is Question => q !== null) ? parsed : null;
+  return parsed.every((question): question is Question => question !== null)
+    ? parsed
+    : null;
 };
 
 export const handleCreateGame = (ws: WebSocket, data: unknown): void => {
