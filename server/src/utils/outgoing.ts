@@ -3,6 +3,13 @@ import type { Game } from '../types.js';
 import { usersByIndex } from '../stores.js';
 import { buildFinalScoreboard } from './scoring.js';
 
+export const buildPlayersPayload = (game: Game) =>
+  game.players.map((player) => ({
+    name: player.name,
+    index: player.index,
+    score: player.score,
+  }));
+
 export const buildQuestionPayload = (game: Game) => {
   const question = game.questions[game.currentQuestion];
   return {

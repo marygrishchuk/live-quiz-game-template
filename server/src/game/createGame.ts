@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import type { WebSocket } from 'ws';
-import type { Game, Question } from './types.js';
-import { sendError, sendJson } from './utils/outgoing.js';
+import type { Game, Question } from '../types.js';
+import { sendError, sendJson } from '../utils/outgoing.js';
 import {
   gamesById,
   generateRoomCode,
   getUserByWebSocket,
   linkRoomCodeToGameId,
-} from './stores.js';
+} from '../stores.js';
 
 const parseOneQuestion = (item: unknown): Question | null => {
   if (!item || typeof item !== 'object' || Array.isArray(item)) return null;

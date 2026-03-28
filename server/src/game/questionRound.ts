@@ -1,10 +1,10 @@
-import type { Game } from './types.js';
+import type { Game } from '../types.js';
 import {
   broadcastQuestion,
   broadcastRankedGameFinished,
   broadcastToGame,
-} from './utils/outgoing.js';
-import { buildResultsWithRoundScores } from './utils/scoring.js';
+} from '../utils/outgoing.js';
+import { buildResultsWithRoundScores } from '../utils/scoring.js';
 
 export const clearQuestionTimer = (game: Game): void => {
   const timerHandle = game.questionTimer;

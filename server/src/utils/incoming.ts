@@ -1,10 +1,10 @@
 import type { RawData, WebSocket } from 'ws';
 import type { WSMessage } from '../types.js';
-import { handleAnswer } from '../answer.js';
-import { handleCreateGame } from '../createGame.js';
-import { handleJoinGame } from '../joinGame.js';
-import { handleReg } from '../reg.js';
-import { handleStartGame } from '../startGame.js';
+import { handleAnswer } from '../game/answer.js';
+import { handleCreateGame } from '../game/createGame.js';
+import { handleJoinGame } from '../game/joinGame.js';
+import { handleReg } from '../game/reg.js';
+import { handleStartGame } from '../game/startGame.js';
 
 const rawToUtf8 = (raw: RawData): string => {
   if (typeof raw === 'string') return raw;

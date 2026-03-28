@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { WebSocketServer } from 'ws';
-import { handleIncoming } from './utils/handlers.js';
+import { handleSocketClosed } from './utils/disconnect.js';
+import { handleIncoming } from './utils/incoming.js';
 
 const DEFAULT_PORT = 3000;
 
@@ -17,6 +18,9 @@ wss.on('connection', (ws) => {
   ws.on('message', (raw) => {
     handleIncoming(ws, raw);
   });
+  const onDisconnect = () => handleSocketClosed(ws);
+  ws.on('close', onDisconnect);
+  ws.on('error', onDisconnect);
 });
 
 wss.on('listening', () => {

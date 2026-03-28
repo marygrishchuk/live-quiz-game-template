@@ -1,11 +1,11 @@
 import type { WebSocket } from 'ws';
-import { broadcastQuestion, sendError } from './utils/outgoing.js';
+import { broadcastQuestion, sendError } from '../utils/outgoing.js';
 import {
   clearQuestionTimer,
   resetRoundAnswerState,
   scheduleQuestionTimer,
 } from './questionRound.js';
-import { gamesById, getUserByWebSocket } from './stores.js';
+import { gamesById, getUserByWebSocket } from '../stores.js';
 
 const readStartGameId = (data: unknown): string | null => {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null;

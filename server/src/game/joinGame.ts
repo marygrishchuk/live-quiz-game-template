@@ -1,20 +1,18 @@
 import type { WebSocket } from 'ws';
-import type { Game, Player } from './types.js';
-import { broadcastToGame, sendError, sendJson } from './utils/outgoing.js';
-import { gamesById, getGameIdByRoomCode, getUserByWebSocket } from './stores.js';
+import type { Player } from '../types.js';
+import {
+  broadcastToGame,
+  buildPlayersPayload,
+  sendError,
+  sendJson,
+} from '../utils/outgoing.js';
+import { gamesById, getGameIdByRoomCode, getUserByWebSocket } from '../stores.js';
 
 const readJoinCode = (data: unknown): string | null => {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null;
   const code = (data as Record<string, unknown>).code;
   return typeof code === 'string' && code.trim() ? code.trim() : null;
 };
-
-const getPlayersPayload = (game: Game) =>
-  game.players.map((player) => ({
-    name: player.name,
-    index: player.index,
-    score: player.score,
-  }));
 
 export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
   const user = getUserByWebSocket(ws);
@@ -45,7 +43,7 @@ export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
   if (existing) {
     existing.ws = ws;
     sendJson(ws, 'game_joined', { gameId });
-    broadcastToGame(game, 'update_players', getPlayersPayload(game));
+    broadcastToGame(game, 'update_players', buildPlayersPayload(game));
     return;
   }
   if (
@@ -63,5 +61,5 @@ export const handleJoinGame = (ws: WebSocket, data: unknown): void => {
     playerName: user.name,
     playerCount: game.players.length,
   });
-  broadcastToGame(game, 'update_players', getPlayersPayload(game));
+  broadcastToGame(game, 'update_players', buildPlayersPayload(game));
 };
