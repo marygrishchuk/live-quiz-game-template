@@ -1,5 +1,6 @@
 import type { RawData, WebSocket } from 'ws';
 import type { WSMessage } from './types.js';
+import { handleReg } from './reg.js';
 
 const rawToUtf8 = (raw: RawData): string => {
   if (typeof raw === 'string') return raw;
@@ -20,8 +21,6 @@ const parseMessage = (raw: RawData): WSMessage | null => {
   }
 };
 
-const onReg = (_ws: WebSocket, _data: unknown): void => {};
-
 const onCreateGame = (_ws: WebSocket, _data: unknown): void => {};
 
 const onJoinGame = (_ws: WebSocket, _data: unknown): void => {};
@@ -36,7 +35,7 @@ export const handleIncoming = (ws: WebSocket, raw: RawData): void => {
     if (!msg) return;
     switch (msg.type) {
       case 'reg':
-        onReg(ws, msg.data);
+        handleReg(ws, msg.data);
         break;
       case 'create_game':
         onCreateGame(ws, msg.data);

@@ -1,6 +1,7 @@
 import type { Game, User } from './types.js';
 
 export const usersByIndex: Record<string, User> = {};
+export const usersByName: Record<string, User> = {};
 export const gamesById: Record<string, Game> = {};
 export const codeToGameId: Record<string, string> = {};
 
